@@ -1,0 +1,35 @@
+{
+  "entities": [
+    {
+      "name": "Person",
+      "attributes": [
+        {
+          "name": "givenName",
+          "type": "string"
+        },
+        {
+          "name": "familyName",
+          "type": "string"
+        },
+        {
+          "name": "enrolled",
+          "type": "boolean",
+          "defaultValue": true
+        },
+        {
+          "name": "deleted",
+          "type": "boolean"
+        },
+        {
+          "name": "hidden",
+          "type": "boolean"
+        },
+        {
+          "name": "accountId",
+          "type": "string",
+          "nullable": true
+        }
+      ]
+    }
+  ]
+}
