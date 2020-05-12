@@ -1,15 +1,18 @@
 import { SafeAny } from "safe-any";
 import { Attribute } from "../ast/Attribute";
-import { SimpleTypeParser } from "./SimpleTypeParser";
-import { DefaultValueParser } from "./DefaultValueParser";
+import { TypeParser } from "./TypeParser";
+import { ValueParser } from "./ValueParser";
 
 export class AttributeParser {
   public static parse(json: SafeAny): Attribute {
     return new Attribute(
       json.get("name").stringValue(),
-      SimpleTypeParser.parse(json.get("type")),
+      TypeParser.parse(json.get("type")),
       json.get("nullable").booleanValue(),
-      DefaultValueParser.parse(json.get("defaultValue")),
+      ValueParser.parse(json.get("defaultValue")),
+      json.get("attributes").arrayValue().map((json) => {
+        return AttributeParser.parse(json);
+      }),
     );
   }
 }

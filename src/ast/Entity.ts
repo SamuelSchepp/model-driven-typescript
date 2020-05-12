@@ -1,4 +1,3 @@
-import { SimpleType } from "./SimpleType";
 import { Attribute } from "./Attribute";
 
 export class Entity {

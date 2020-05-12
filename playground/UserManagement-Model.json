@@ -4,12 +4,18 @@
       "name": "Person",
       "attributes": [
         {
-          "name": "givenName",
-          "type": "string"
-        },
-        {
-          "name": "familyName",
-          "type": "string"
+          "name": "name",
+          "type": "object",
+          "attributes": [
+            {
+              "name": "given",
+              "type": "string"
+            },
+            {
+              "name": "family",
+              "type": "string"
+            }
+          ]
         },
         {
           "name": "enrolled",
@@ -17,12 +23,18 @@
           "defaultValue": true
         },
         {
-          "name": "deleted",
-          "type": "boolean"
-        },
-        {
-          "name": "hidden",
-          "type": "boolean"
+          "name": "meta",
+          "type": "object",
+          "attributes": [
+            {
+              "name": "deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "hidden",
+              "type": "boolean"
+            }
+          ]
         },
         {
           "name": "accountId",

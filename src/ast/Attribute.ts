@@ -1,12 +1,13 @@
-import { SimpleType } from "./SimpleType";
-import { DefaultValue } from "./DefaultValue";
+import { Value } from "./value/Value";
+import { Type } from "./type/Type";
 
 export class Attribute {
   public constructor(
     public readonly name: string,
-    public readonly type: SimpleType,
+    public readonly type: Type,
     public readonly nullable: boolean,
-    public readonly defaultValue: DefaultValue | null,
+    public readonly defaultValue: Value,
+    public readonly attributes: Attribute[],
   ) {
   }
 }

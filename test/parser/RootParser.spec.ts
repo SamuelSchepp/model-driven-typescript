@@ -4,10 +4,14 @@ import { expect } from "chai";
 import { Root } from "../../src/ast/Root";
 import { Entity } from "../../src/ast/Entity";
 import { Attribute } from "../../src/ast/Attribute";
-import { SimpleType } from "../../src/ast/SimpleType";
-import { DefaultValue } from "../../src/ast/DefaultValue";
 import fs from "fs";
 import * as path from "path";
+import { NullValue } from "../../src/ast/value/NullValue";
+import { BooleanValue } from "../../src/ast/value/BooleanValue";
+import { StringType } from "../../src/ast/type/StringType";
+import { BooleanType } from "../../src/ast/type/BooleanType";
+import { ObjectType } from "../../src/ast/type/ObjectType";
+import { RootValidator } from "../../src/validator/RootValidator";
 
 describe("Root", () => {
   it("should parse an root object", () => {
@@ -22,45 +26,69 @@ describe("Root", () => {
             "Person",
             [
               new Attribute(
-                "givenName",
-                SimpleType.stringType,
+                "name",
+                new ObjectType(),
                 false,
-                null,
-              ),
-              new Attribute(
-                "familyName",
-                SimpleType.stringType,
-                false,
-                null,
+                new NullValue(),
+                [
+                  new Attribute(
+                    "given",
+                    new StringType(),
+                    false,
+                    new NullValue(),
+                    [],
+                  ),
+                  new Attribute(
+                    "family",
+                    new StringType(),
+                    false,
+                    new NullValue(),
+                    [],
+                  ),
+                ],
               ),
               new Attribute(
                 "enrolled",
-                SimpleType.booleanType,
+                new BooleanType(),
                 false,
-                new DefaultValue(true),
+                new BooleanValue(true),
+                [],
               ),
               new Attribute(
-                "deleted",
-                SimpleType.booleanType,
+                "meta",
+                new ObjectType(),
                 false,
-                null,
-              ),
-              new Attribute(
-                "hidden",
-                SimpleType.booleanType,
-                false,
-                null,
+                new NullValue(),
+                [
+                  new Attribute(
+                    "deleted",
+                    new BooleanType(),
+                    false,
+                    new NullValue(),
+                    [],
+                  ),
+                  new Attribute(
+                    "hidden",
+                    new BooleanType(),
+                    false,
+                    new NullValue(),
+                    [],
+                  ),
+                ],
               ),
               new Attribute(
                 "accountId",
-                SimpleType.stringType,
+                new StringType(),
                 true,
-                null,
+                new NullValue(),
+                [],
               ),
             ],
           ),
         ],
       ),
     );
+
+    RootValidator.validate(object);
   });
 });
