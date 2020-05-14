@@ -10,9 +10,6 @@ export class AttributeParser {
       TypeParser.parse(json.get("type")),
       json.get("nullable").booleanValue(),
       ValueParser.parse(json.get("defaultValue")),
-      json.get("attributes").arrayValue().map((json) => {
-        return AttributeParser.parse(json);
-      }),
     );
   }
 }

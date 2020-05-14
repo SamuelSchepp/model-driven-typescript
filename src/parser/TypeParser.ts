@@ -4,11 +4,25 @@ import { Type } from "../ast/type/Type";
 import { StringType } from "../ast/type/StringType";
 import { NumberType } from "../ast/type/NumberType";
 import { BooleanType } from "../ast/type/BooleanType";
-import { ObjectType } from "../ast/type/ObjectType";
+import { EntityType } from "../ast/type/EntityType";
 
 export class TypeParser {
   public static parse(json: SafeAny): Type {
     const stringLiteral = json.stringOrNull();
+
+    if (stringLiteral == null) {
+      throw new ValueNotAllowedError(
+        "type",
+        stringLiteral,
+        [
+          "string",
+          "number",
+          "boolean",
+          "[EntityName]",
+        ],
+      );
+    }
+
     switch (stringLiteral) {
     case "string":
       return new StringType();
@@ -16,16 +30,8 @@ export class TypeParser {
       return new NumberType();
     case "boolean":
       return new BooleanType();
-    case "object":
-      return new ObjectType();
     default:
-      throw new ValueNotAllowedError(
-        "type",
-        stringLiteral,
-        [
-          "string", "number", "boolean",
-        ],
-      );
+      return new EntityType(stringLiteral);
     }
   }
 }

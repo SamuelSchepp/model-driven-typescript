@@ -5,17 +5,7 @@
       "attributes": [
         {
           "name": "name",
-          "type": "object",
-          "attributes": [
-            {
-              "name": "given",
-              "type": "string"
-            },
-            {
-              "name": "family",
-              "type": "string"
-            }
-          ]
+          "type": "PersonName"
         },
         {
           "name": "enrolled",
@@ -24,22 +14,38 @@
         },
         {
           "name": "meta",
-          "type": "object",
-          "attributes": [
-            {
-              "name": "deleted",
-              "type": "boolean"
-            },
-            {
-              "name": "hidden",
-              "type": "boolean"
-            }
-          ]
+          "type": "PersonMeta"
         },
         {
           "name": "accountId",
           "type": "string",
           "nullable": true
+        }
+      ]
+    },
+    {
+      "name": "PersonName",
+      "attributes": [
+        {
+          "name": "given",
+          "type": "string"
+        },
+        {
+          "name": "family",
+          "type": "string"
+        }
+      ]
+    },
+    {
+      "name": "PersonMeta",
+      "attributes": [
+        {
+          "name": "deleted",
+          "type": "boolean"
+        },
+        {
+          "name": "hidden",
+          "type": "boolean"
         }
       ]
     }

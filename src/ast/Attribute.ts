@@ -7,7 +7,6 @@ export class Attribute {
     public readonly type: Type,
     public readonly nullable: boolean,
     public readonly defaultValue: Value,
-    public readonly attributes: Attribute[],
   ) {
   }
 }
