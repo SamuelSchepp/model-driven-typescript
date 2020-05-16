@@ -12,7 +12,9 @@
   "author": "Samuel Schepp",
   "license": "MIT",
   "dependencies": {
+    "@types/fs-extra": "^9.0.0",
     "@types/node": "^13.13.5",
+    "fs-extra": "^9.0.0",
     "safe-any": "git+https://github.com/SamuelSchepp/safe-any.git",
     "typescript": "^3.8.3"
   },

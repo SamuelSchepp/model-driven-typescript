@@ -5,7 +5,8 @@
       "attributes": [
         {
           "name": "name",
-          "type": "PersonName"
+          "type": "PersonName",
+          "nullable": true
         },
         {
           "name": "enrolled",
@@ -45,7 +46,8 @@
         },
         {
           "name": "hidden",
-          "type": "boolean"
+          "type": "boolean",
+          "defaultValue": true
         }
       ]
     }

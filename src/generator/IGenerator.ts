@@ -1,5 +1,6 @@
 import { Root } from "../ast/Root";
+import { FileWriter } from "./tools/FileWriter";
 
 export interface IGenerator {
-  generate(root: Root, targetDir: string): void;
+  generate(root: Root, fileWriter: FileWriter): void;
 }
