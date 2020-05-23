@@ -5,6 +5,7 @@ import { EntityParser } from "./EntityParser";
 export class RootParser {
   public static parse(json: SafeAny): Root {
     return new Root(
+      json.get("name").stringValue(),
       json.get("entities").arrayValue().map((entity: SafeAny) => {
         return EntityParser.parse(entity);
       }),

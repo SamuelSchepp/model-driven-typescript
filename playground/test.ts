@@ -12,5 +12,12 @@ const object = RootParser.parse(new SafeAny(json));
 
 RootValidator.validate(object);
 
-new Generator().generate(object, new FileWriter(path.join(__dirname, "src-gen")));
+new Generator().generate(
+  object,
+  new FileWriter(
+    path.join(__dirname, "src-gen"),
+    "UserManagement-Model.json",
+    object.name,
+  )
+);
 

@@ -1,5 +1,5 @@
-import { Person } from "./src-gen/Person";
+import { Person } from "./src-gen";
 
-const person = Person.createFromJson({});
+const person = Person.fromJson({});
 
 console.log(JSON.stringify(person));

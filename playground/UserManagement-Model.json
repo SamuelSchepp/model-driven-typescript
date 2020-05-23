@@ -1,12 +1,23 @@
 {
+  "name": "Demo Model",
   "entities": [
     {
       "name": "Person",
       "attributes": [
         {
           "name": "name",
-          "type": "PersonName",
-          "nullable": true
+          "type": "compound",
+          "attributes": [
+            {
+              "name": "given",
+              "type": "string"
+            },
+            {
+              "name": "family",
+              "type": "string",
+              "defaultValue": "-"
+            }
+          ]
         },
         {
           "name": "enrolled",
@@ -14,40 +25,28 @@
           "defaultValue": true
         },
         {
-          "name": "meta",
-          "type": "PersonMeta"
+          "name": "customMeta",
+          "type": "compound",
+          "attributes": [
+            {
+              "name": "deleted",
+              "type": "boolean"
+            },
+            {
+              "name": "hidden",
+              "type": "boolean",
+              "defaultValue": true
+            },
+            {
+              "name": "editTime",
+              "type": "number?"
+            }
+          ]
         },
         {
           "name": "accountId",
-          "type": "string",
-          "nullable": true
-        }
-      ]
-    },
-    {
-      "name": "PersonName",
-      "attributes": [
-        {
-          "name": "given",
-          "type": "string"
-        },
-        {
-          "name": "family",
-          "type": "string"
-        }
-      ]
-    },
-    {
-      "name": "PersonMeta",
-      "attributes": [
-        {
-          "name": "deleted",
-          "type": "boolean"
-        },
-        {
-          "name": "hidden",
-          "type": "boolean",
-          "defaultValue": true
+          "type": "string?",
+          "defaultValue": "none"
         }
       ]
     }

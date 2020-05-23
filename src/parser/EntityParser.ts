@@ -1,6 +1,5 @@
 import { SafeAny } from "safe-any";
 import { Entity } from "../ast/Entity";
-import { TypeParser } from "./TypeParser";
 import { AttributeParser } from "./AttributeParser";
 
 export class EntityParser {
