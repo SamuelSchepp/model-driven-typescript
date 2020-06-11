@@ -15,8 +15,8 @@
     "@types/fs-extra": "^9.0.0",
     "@types/node": "^13.13.5",
     "fs-extra": "^9.0.0",
-    "safe-any": "git+https://github.com/SamuelSchepp/safe-any.git",
-    "typescript": "^3.8.3"
+    "safe-any": "github:SamuelSchepp/safe-any#1.0.0",
+    "typescript": "^3.9.5"
   },
   "bin": {
     "mdt": "out-tsc/index.js"
