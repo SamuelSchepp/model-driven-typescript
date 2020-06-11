@@ -8,22 +8,11 @@ import { BooleanAttribute } from "../../ast/Attribute/BooleanAttribute";
 import { OptionalStringAttribute } from "../../ast/Attribute/OptionalStringAttribute";
 import { OptionalNumberAttribute } from "../../ast/Attribute/OptionalNumberAttribute";
 import { OptionalBooleanAttribute } from "../../ast/Attribute/OptionalBooleanAttribute";
+import { toUpperCamelCase } from "./toUpperCamelCase";
 
-export function defaultValueLiteral(attribute: Attribute, buffer: StringBuffer): void {
+export function defaultValueLiteral(attribute: Attribute, buffer: StringBuffer, entityName: string): void {
   if (attribute instanceof CompoundAttribute) {
-    buffer.linePart(`{`);
-    buffer.newline();
-    buffer.tabIn();
-    attribute.attributes.forEach((subAttribute) => {
-      buffer.tab();
-      buffer.linePart(`${subAttribute.name}: `);
-      defaultValueLiteral(subAttribute, buffer);
-      buffer.linePart(`,`);
-      buffer.newline();
-    });
-    buffer.tabOut();
-    buffer.tab();
-    buffer.linePart(`}`);
+    buffer.linePart(`${entityName}${toUpperCamelCase(attribute.name)}.createNew()`);
   } else if (attribute instanceof StringAttribute) {
     buffer.linePart(`"${attribute.defaultValue}"`);
   } else if (attribute instanceof NumberAttribute) {

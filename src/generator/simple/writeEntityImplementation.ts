@@ -5,25 +5,21 @@ import { defaultValueLiteral } from "./defaultValueLiteral";
 import { attributeParserConstruct } from "./attributeParserConstruct";
 import { writeGetter } from "./writeGetter";
 import { writeSetter } from "./writeSetter";
+import { mergeConstruct } from "./mergeConstruct";
+import { writeClassAttributes } from "./writeClassAttributes";
+import { writeImportsForEntity } from "./writeImportsForEntity";
 import { CompoundAttribute } from "../../ast/Attribute/CompoundAttribute";
 
 export function writeEntityImplementation(entity: Entity, fileWriter: FileWriter): void {
   fileWriter.write(`${entity.name}.ts`,(buffer) => {
     buffer.line(`import { Entity } from "./Entity";`);
+    buffer.line(`import { EntityMeta } from "./EntityMeta";`);
+    buffer.line(`import { I${entity.name} } from "./I${entity.name}";`);
+    writeImportsForEntity(entity, buffer);
     buffer.line(``);
     buffer.line(`export class ${entity.name} extends Entity {`);
     buffer.tabIn();
-    entity.attributes.forEach((attribute) => {
-      buffer.tab();
-      buffer.linePart(`private `);
-      if (attribute instanceof CompoundAttribute) {
-        buffer.linePart(`readonly `);
-      }
-      buffer.linePart(`${attribute.name}: `);
-      typeLiteral(attribute, buffer);
-      buffer.linePart(`;`);
-      buffer.newline();
-    });
+    writeClassAttributes(buffer, entity.attributes, entity.name);
     buffer.line(``);
     buffer.line(`private constructor(`);
     buffer.tabIn();
@@ -32,21 +28,13 @@ export function writeEntityImplementation(entity: Entity, fileWriter: FileWriter
     entity.attributes.forEach((attribute) => {
       buffer.tab();
       buffer.linePart(`${attribute.name}: `);
-      typeLiteral(attribute, buffer);
+      typeLiteral(attribute, buffer, entity.name);
       buffer.linePart(`,`);
       buffer.newline();
     });
-    buffer.line(`meta: {`);
-    buffer.tabIn();
-    buffer.line(`created: Date,`);
-    buffer.line(`modified: Date | null,`);
-    buffer.line(`deleted: boolean,`);
+    buffer.line(`meta: EntityMeta,`);
     buffer.tabOut();
-    buffer.line(`}`);
-    buffer.tabOut();
-    buffer.line(`},`);
-    buffer.tabOut();
-    buffer.line(`) {`);
+    buffer.line(`}) {`);
     buffer.tabIn();
     buffer.line(`super({`);
     buffer.tabIn();
@@ -67,17 +55,11 @@ export function writeEntityImplementation(entity: Entity, fileWriter: FileWriter
     entity.attributes.forEach((attribute) => {
       buffer.tab();
       buffer.linePart(`${attribute.name}: `);
-      defaultValueLiteral(attribute, buffer);
+      defaultValueLiteral(attribute, buffer, entity.name);
       buffer.linePart(`,`);
       buffer.newline();
     });
-    buffer.line(`meta: {`);
-    buffer.tabIn();
-    buffer.line(`created: new Date(),`);
-    buffer.line(`modified: null,`);
-    buffer.line(`deleted: false,`);
-    buffer.tabOut();
-    buffer.line(`}`);
+    buffer.line(`meta: EntityMeta.createNew(),`);
     buffer.tabOut();
     buffer.line(`});`);
     buffer.tabOut();
@@ -91,7 +73,7 @@ export function writeEntityImplementation(entity: Entity, fileWriter: FileWriter
     entity.attributes.forEach((attribute) => {
       buffer.tab();
       buffer.linePart(`${attribute.name}: `);
-      typeLiteral(attribute, buffer);
+      typeLiteral(attribute, buffer, entity.name);
       buffer.linePart(`,`);
       buffer.newline();
     });
@@ -105,56 +87,58 @@ export function writeEntityImplementation(entity: Entity, fileWriter: FileWriter
     entity.attributes.forEach((attribute) => {
       buffer.line(`${attribute.name}: attributes.${attribute.name},`);
     });
-    buffer.line(`meta: {`);
-    buffer.tabIn();
-    buffer.line(`created: new Date(),`);
-    buffer.line(`modified: null,`);
-    buffer.line(`deleted: false,`);
-    buffer.tabOut();
-    buffer.line(`}`);
+    buffer.line(`meta: EntityMeta.createNew()`);
     buffer.tabOut();
     buffer.line(`});`);
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
 
-    buffer.line(`public static fromJson(json: any): ${entity.name} {`);
+    buffer.line(`public static fromJson(json: I${entity.name} | any): ${entity.name} {`);
     buffer.tabIn();
     buffer.line(`return new ${entity.name}({`);
     buffer.tabIn();
     entity.attributes.forEach((attribute) => {
       buffer.tab();
       buffer.linePart(`${attribute.name}: `);
-      attributeParserConstruct(buffer, attribute, entity, []);
+      attributeParserConstruct(buffer, attribute, entity.name);
       buffer.linePart(`,`);
       buffer.newline();
     });
-    buffer.line(`meta: {`);
-    buffer.tabIn();
-    buffer.line(`created: this.parseDateOrNull(json, "meta.created") ?? new Date(),`);
-    buffer.line(`modified: this.parseDateOrNull(json, "meta.modified") ?? null,`);
-    buffer.line(`deleted: this.parseBooleanOrNull(json, "meta.deleted") ?? false,`);
-    buffer.tabOut();
-    buffer.line(`}`);
+    buffer.line(`meta: EntityMeta.fromJson(json?.meta),`);
     buffer.tabOut();
     buffer.line(`});`);
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
+
+    buffer.line(`public mergeWithJson(json: any): string[] {`);
+    buffer.tabIn();
     entity.attributes.forEach((attribute) => {
-      writeGetter(buffer, attribute, []);
+      mergeConstruct(attribute, buffer);
+    });
+    buffer.tabOut();
+    buffer.line(`}`);
+    buffer.line(``);
+
+    entity.attributes.forEach((attribute) => {
+      writeGetter(buffer, attribute, entity.name);
     });
     entity.attributes.forEach((attribute) => {
-      writeSetter(buffer, attribute, []);
+      writeSetter(buffer, attribute, entity.name);
     });
-    buffer.line(`public toJson(): any {`);
+    buffer.line(`public toJson(): I${entity.name} {`);
     buffer.tabIn();
     buffer.line(`return {`);
     buffer.tabIn();
     entity.attributes.forEach((attribute) => {
-      buffer.line(`${attribute.name}: this.${attribute.name},`);
+      if (attribute instanceof CompoundAttribute) {
+        buffer.line(`${attribute.name}: this.${attribute.name}.toJson(),`);
+      } else {
+        buffer.line(`${attribute.name}: this.${attribute.name},`);
+      }
     });
-    buffer.line(`meta: this.meta,`);
+    buffer.line(`meta: this.meta.toJson(),`);
     buffer.tabOut();
     buffer.line(`};`);
     buffer.tabOut();

@@ -5,6 +5,9 @@ import { writeEntityImplementation } from "./writeEntityImplementation";
 import { writeEntityBaseClass } from "./writeEntityBaseClass";
 import { writeIndex } from "./writeIndex";
 import { writeResolvedFile } from "./writeResolvedFile";
+import { writeSubEntities } from "./writeSubEntities";
+import { writeEntityMetaClass } from "./writeEntityMetaClass";
+import { writeEntityInterface } from "./writeEntityInterface";
 
 export class Generator implements IGenerator {
   public generate(root: Root, fileWriter: FileWriter): void {
@@ -13,9 +16,12 @@ export class Generator implements IGenerator {
     writeIndex(root, fileWriter);
     writeEntityBaseClass(fileWriter);
     writeResolvedFile(fileWriter, root);
+    writeEntityMetaClass(fileWriter);
 
     root.entities.forEach((entity) => {
       writeEntityImplementation(entity, fileWriter);
+      writeEntityInterface(entity, fileWriter);
+      writeSubEntities(entity, fileWriter);
     });
   }
 }

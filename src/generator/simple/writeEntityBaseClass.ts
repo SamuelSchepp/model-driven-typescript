@@ -3,10 +3,9 @@ import { StringBuffer } from "../tools/StringBuffer";
 import { typeLiteral } from "./typeLiteral";
 
 function handleSimpleType(buffer: StringBuffer, type: string): void {
-  buffer.line(`const field = this.getField(json, path);`);
-  buffer.line(`if (typeof(field) === "${type}") {`);
+  buffer.line(`if (typeof(json) === "${type}") {`);
   buffer.tabIn();
-  buffer.line(`return field;`);
+  buffer.line(`return json;`);
   buffer.tabOut();
   buffer.line(`} else {`);
   buffer.tabIn();
@@ -17,28 +16,18 @@ function handleSimpleType(buffer: StringBuffer, type: string): void {
 
 export function writeEntityBaseClass(fileWriter: FileWriter): void {
   fileWriter.write(`Entity.ts`, buffer => {
+    buffer.line(`import { EntityMeta } from "./EntityMeta";`);
+    buffer.line(``);
     buffer.line(`export abstract class Entity {`);
     buffer.tabIn();
-    buffer.line(`protected meta: {`);
-    buffer.tabIn();
-    buffer.line(`created: Date,`);
-    buffer.line(`modified: Date | null,`);
-    buffer.line(`deleted: boolean,`);
-    buffer.tabOut();
-    buffer.line(`};`);
+    buffer.line(`protected meta: EntityMeta;`);
     buffer.line(``);
 
     buffer.line(`protected constructor(`);
     buffer.tabIn();
     buffer.line(`attributes: {`);
     buffer.tabIn();
-    buffer.line(`meta: {`);
-    buffer.tabIn();
-    buffer.line(`created: Date,`);
-    buffer.line(`modified: Date | null,`);
-    buffer.line(`deleted: boolean,`);
-    buffer.tabOut();
-    buffer.line(`}`);
+    buffer.line(`meta: EntityMeta`);
     buffer.tabOut();
     buffer.line(`},`);
     buffer.tabOut();
@@ -51,75 +40,63 @@ export function writeEntityBaseClass(fileWriter: FileWriter): void {
 
     buffer.line(`public getMetaCreated(): Date {`);
     buffer.tabIn();
-    buffer.line(`return this.meta.created;`);
+    buffer.line(`return this.meta.getCreated();`);
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
     buffer.line(`public getMetaModified(): Date | null {`);
     buffer.tabIn();
-    buffer.line(`return this.meta.modified;`);
+    buffer.line(`return this.meta.getModified();`);
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
     buffer.line(`public getMetaDeleted(): boolean {`);
     buffer.tabIn();
-    buffer.line(`return this.meta.deleted;`);
+    buffer.line(`return this.meta.getDeleted();`);
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
 
-    buffer.line(`public updateModifiedDate(): void {`);
+    buffer.line(`protected updateModifiedDate(): void {`);
     buffer.tabIn();
-    buffer.line(`this.meta.modified = new Date();`);
+    buffer.line(`this.meta.setModified(new Date());`);
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
 
-    buffer.line(`protected static getField(json: any, path: string): any | null {`);
-    buffer.tabIn();
-    buffer.line(`const pathSegments = path.split(".");`);
-    buffer.line(`let current = json;`);
-    buffer.line(`for (const pathSegment of pathSegments) {`);
-    buffer.tabIn();
-    buffer.line(`current = current?.[pathSegment];`);
-    buffer.tabOut();
-    buffer.line(`}`);
-    buffer.line(`return current;`);
-    buffer.tabOut();
-    buffer.line(`}`);
-    buffer.line(``);
-
-    buffer.line(`protected static parseStringOrNull(json: any, path: string): string | null {`);
+    buffer.line(`protected static parseStringOrNull(json: any): string | null {`);
     buffer.tabIn();
     handleSimpleType(buffer, "string");
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
 
-    buffer.line(`protected static parseNumberOrNull(json: any, path: string): number | null {`);
+    buffer.line(`protected static parseNumberOrNull(json: any): number | null {`);
     buffer.tabIn();
     handleSimpleType(buffer, "number");
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
 
-    buffer.line(`protected static parseBooleanOrNull(json: any, path: string): boolean | null {`);
+    buffer.line(`protected static parseBooleanOrNull(json: any): boolean | null {`);
     buffer.tabIn();
     handleSimpleType(buffer, "boolean");
     buffer.tabOut();
     buffer.line(`}`);
     buffer.line(``);
 
-    buffer.line(`protected static parseDateOrNull(json: any, path: string): Date | null {`);
+    buffer.line(`protected static parseDateOrNull(json: any): Date | null {`);
     buffer.tabIn();
-    buffer.line(`const field = this.getField(json, path);`);
-    buffer.line(`if (typeof field != "string") {`);
+    buffer.line(`if (typeof json === "string") {`);
+    buffer.tabIn();
+    buffer.line(`const date = new Date(json);`);
+    buffer.line(`return date;`);
+    buffer.tabOut();
+    buffer.line(`} else {`);
     buffer.tabIn();
     buffer.line(`return null;`);
     buffer.tabOut();
     buffer.line(`}`);
-    buffer.line(`const date = new Date(field);`);
-    buffer.line(`return date;`);
     buffer.tabOut();
     buffer.line(`}`);
     buffer.tabOut();

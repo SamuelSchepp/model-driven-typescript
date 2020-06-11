@@ -11,7 +11,7 @@ import { CompoundAttribute } from "../../ast/Attribute/CompoundAttribute";
 import { Entity } from "../../ast/Entity";
 import { toUpperCamelCase } from "./toUpperCamelCase";
 
-export function typeLiteral(attribute: Attribute, buffer: StringBuffer, entityName: string): void {
+export function typeLiteralOrInterface(attribute: Attribute, buffer: StringBuffer, entityName: string): void {
   if (attribute instanceof StringAttribute) {
     buffer.linePart(`string`);
   } else if (attribute instanceof NumberAttribute) {
@@ -25,7 +25,7 @@ export function typeLiteral(attribute: Attribute, buffer: StringBuffer, entityNa
   } else if (attribute instanceof OptionalBooleanAttribute) {
     buffer.linePart(`boolean | null`);
   } else if (attribute instanceof CompoundAttribute) {
-    buffer.linePart(`${entityName}${toUpperCamelCase(attribute.name)}`);
+    buffer.linePart(`I${entityName}${toUpperCamelCase(attribute.name)}`);
   } else {
     throw new NonExhaustiveError();
   }
