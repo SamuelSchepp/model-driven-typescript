@@ -4,9 +4,7 @@
     "node": true
   },
   "extends": [
-    "eslint:recommended",
-    "plugin:@typescript-eslint/eslint-recommended",
-    "plugin:@typescript-eslint/recommended"
+    "explicit-typescript"
   ],
   "globals": {
     "Atomics": "readonly",
@@ -21,39 +19,6 @@
   "plugins": [
     "@typescript-eslint"
   ],
-  "rules": {
-    "no-multiple-empty-lines": [
-      "error",
-      {
-        "max": 1
-      }
-    ],
-    "indent": [
-      "error",
-      2
-    ],
-    "quotes": [
-      "error",
-      "double",
-      {
-        "allowTemplateLiterals": true
-      }
-    ],
-    "semi": [
-      "error",
-      "always"
-    ],
-    "no-unused-vars": [
-      "off"
-    ],
-    "comma-dangle": [
-      "error",
-      "always-multiline"
-    ],
-    "@typescript-eslint/no-unused-vars": "off",
-    "@typescript-eslint/interface-name-prefix": "off",
-    "@typescript-eslint/no-inferrable-types": "off"
-  },
   "ignorePatterns": [
     "src-gen",
     "test"
