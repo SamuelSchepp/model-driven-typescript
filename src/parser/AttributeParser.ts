@@ -1,4 +1,3 @@
-import { SafeAny } from "safe-any";
 import { Attribute } from "../ast/Attribute/Attribute";
 import { StringAttribute } from "../ast/Attribute/StringAttribute";
 import { NumberAttribute } from "../ast/Attribute/NumberAttribute";
@@ -8,9 +7,10 @@ import { OptionalNumberAttribute } from "../ast/Attribute/OptionalNumberAttribut
 import { OptionalBooleanAttribute } from "../ast/Attribute/OptionalBooleanAttribute";
 import { CompoundAttribute } from "../ast/Attribute/CompoundAttribute";
 import { NonExhaustiveError } from "../generator/errors/NonExhaustiveError";
+import { Any } from "typed-any-access";
 
 export class AttributeParser {
-  public static parse(json: SafeAny): Attribute {
+  public static parse(json: Any): Attribute {
     const type = json.get("type").stringOrNull();
     const name = json.get("name").stringValue();
 
